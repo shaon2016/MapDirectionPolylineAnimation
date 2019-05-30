@@ -1,9 +1,14 @@
 package com.lastblade.googlemapdirection
 
 import android.Manifest
+import android.animation.Animator
+import android.animation.ValueAnimator
 import android.graphics.Color
-import android.os.Bundle
+import android.graphics.Color.BLACK
+import android.graphics.Color.RED
 import android.support.v7.app.AppCompatActivity
+import android.os.Bundle
+import android.view.animation.DecelerateInterpolator
 import com.amalbit.trail.Route
 import com.amalbit.trail.RouteOverlayView
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -12,6 +17,8 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.Polyline
+import com.google.android.gms.maps.model.PolylineOptions
 import com.google.maps.DirectionsApi
 import com.google.maps.GeoApiContext
 import com.google.maps.android.PolyUtil
@@ -24,17 +31,18 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
+import com.logicbeanzs.uberpolylineanimation.MapAnimator
 import kotlinx.android.synthetic.main.activity_maps.*
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
+class RouteAnimActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_maps)
+        setContentView(R.layout.activity_route_anim)
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
@@ -50,7 +58,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val target1 = LatLng(22.3518, 91.8331)
         val target2 = LatLng(22.3610, 91.8111)
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(origin, 15f))
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(origin, 12f))
         addMarkersToMap(origin)
         addMarkersToMap(target1)
         addMarkersToMap(target2)
@@ -82,35 +90,34 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun drawPath(
         origin: LatLng, target1: LatLng, target2: LatLng
     ) {
-        val results = getDirectionDetails(origin, target1)
+//        val results1 = getDirectionDetails(origin, target1)
+        val results2 = getDirectionDetails(origin, target2)
 
-        results?.let {
+        /*results1?.let {
             val decodedPath = PolyUtil.decode(
-                results.routes[0]
+                results1.routes[0]
                     .overviewPolyline.encodedPath
             )
 
-            /*mMap.addPolyline(
+            mMap.addPolyline(
                 PolylineOptions()
                     .addAll(decodedPath)
-            )*/
+            )
 
-            mMap.setOnMapLoadedCallback {
-                Route.Builder(mapOverlayView)
-                    .setRouteType(RouteOverlayView.RouteType.PATH)
-                    .setLatLngs(decodedPath)
-                    .setCameraPosition(mMap.cameraPosition)
-                    .setProjection(mMap.projection)
-                    .setBottomLayerColor(Color.YELLOW)
-                    .setTopLayerColor(Color.RED)
-                    .create()
-            }
 
-            mMap.setOnCameraMoveListener {
-                mapOverlayView.onCameraMove(mMap.projection, mMap.cameraPosition);
-            }
+        }*/
+
+        results2?.let {
+            val decodedPath = PolyUtil.decode(
+                results2.routes[0]
+                    .overviewPolyline.encodedPath
+            )
+
+
         }
     }
+
+
 
 
     private fun getDirectionDetails(
