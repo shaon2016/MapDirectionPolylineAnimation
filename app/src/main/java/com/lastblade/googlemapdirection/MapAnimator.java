@@ -1,18 +1,12 @@
 package com.lastblade.googlemapdirection;
 
-import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ArgbEvaluator;
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
-import android.content.Context;
+import android.animation.*;
 import android.graphics.Color;
 import android.support.annotation.ColorRes;
 import android.support.annotation.IntegerRes;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
-
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
@@ -34,8 +28,8 @@ public class MapAnimator {
 
     private  AnimatorSet secondLoopRunAnimSet;
 
-    private  int GREY = Color.parseColor("#FFA7A6A6");
-    private  int BLACK = Color.BLACK;
+    private  int GREY = Color.parseColor("#D81B60");
+    private  int BLACK = Color.parseColor("#008577");
     private  int PERCENT_COMPLETION = 2500;
     private  int COLOR_FILL_ANIMATION = 1800;
     private  int FOREGROUND_TIME = 2000;

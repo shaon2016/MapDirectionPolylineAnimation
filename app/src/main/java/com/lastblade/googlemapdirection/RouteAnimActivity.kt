@@ -1,9 +1,7 @@
 package com.lastblade.googlemapdirection
 
 import android.Manifest
-import android.graphics.Color
 import android.os.Bundle
-import android.provider.CalendarContract
 import android.support.v7.app.AppCompatActivity
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -85,7 +83,6 @@ class RouteAnimActivity : AppCompatActivity(), OnMapReadyCallback {
         val results1 = getDirectionDetails(origin, target1)
         val results2 = getDirectionDetails(origin, target2)
 
-        var mapAnimator = MapAnimator.getInstance()
 
         results1?.let {
             val decodedPath = PolyUtil.decode(
@@ -110,6 +107,7 @@ class RouteAnimActivity : AppCompatActivity(), OnMapReadyCallback {
             val cu = CameraUpdateFactory.newLatLngBounds(bounds, 150)
             mMap.animateCamera(cu)
 
+            var mapAnimator = MapAnimator.getInstance()
             mapAnimator?.animateRoute(mMap, decodedPath)
         }
 
@@ -130,7 +128,9 @@ class RouteAnimActivity : AppCompatActivity(), OnMapReadyCallback {
             val cu = CameraUpdateFactory.newLatLngBounds(bounds, 100)
             mMap.animateCamera(cu)
 
-            mapAnimator = MapAnimator.getInstance()
+            val mapAnimator = MapAnimator.getInstance()
+            mapAnimator.setPrimaryLineColor(R.color.Indigo)
+//            mapAnimator.setSecondaryLineColor(R.color.Blue)
             mapAnimator.animateRoute(mMap, decodedPath)
         }
     }
