@@ -1,24 +1,17 @@
 package com.lastblade.googlemapdirection
 
 import android.Manifest
-import android.animation.Animator
-import android.animation.ValueAnimator
 import android.graphics.Color
-import android.graphics.Color.BLACK
-import android.graphics.Color.RED
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.view.animation.DecelerateInterpolator
-import com.amalbit.trail.Route
-import com.amalbit.trail.RouteOverlayView
+import android.provider.CalendarContract
+import android.support.v7.app.AppCompatActivity
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.Polyline
-import com.google.android.gms.maps.model.PolylineOptions
 import com.google.maps.DirectionsApi
 import com.google.maps.GeoApiContext
 import com.google.maps.android.PolyUtil
@@ -31,10 +24,9 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
-import com.logicbeanzs.uberpolylineanimation.MapAnimator
-import kotlinx.android.synthetic.main.activity_maps.*
 import java.io.IOException
 import java.util.concurrent.TimeUnit
+
 
 class RouteAnimActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -90,22 +82,36 @@ class RouteAnimActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun drawPath(
         origin: LatLng, target1: LatLng, target2: LatLng
     ) {
-//        val results1 = getDirectionDetails(origin, target1)
+        val results1 = getDirectionDetails(origin, target1)
         val results2 = getDirectionDetails(origin, target2)
 
-        /*results1?.let {
+        var mapAnimator = MapAnimator.getInstance()
+
+        results1?.let {
             val decodedPath = PolyUtil.decode(
                 results1.routes[0]
                     .overviewPolyline.encodedPath
             )
 
-            mMap.addPolyline(
-                PolylineOptions()
-                    .addAll(decodedPath)
-            )
+//            mMap.addPolyline(
+//                PolylineOptions()
+//                    .addAll(decodedPath)
+//            )
 
 
-        }*/
+            val builder = LatLngBounds.Builder()
+            decodedPath.forEach { latlngs ->
+                builder.include(latlngs)
+            }
+
+            val bounds = builder.build()
+
+            //BOUND_PADDING is an int to specify padding of bound.. try 100.
+            val cu = CameraUpdateFactory.newLatLngBounds(bounds, 150)
+            mMap.animateCamera(cu)
+
+            mapAnimator?.animateRoute(mMap, decodedPath)
+        }
 
         results2?.let {
             val decodedPath = PolyUtil.decode(
@@ -113,7 +119,19 @@ class RouteAnimActivity : AppCompatActivity(), OnMapReadyCallback {
                     .overviewPolyline.encodedPath
             )
 
+            val builder = LatLngBounds.Builder()
+            decodedPath.forEach { latlngs ->
+                builder.include(latlngs)
+            }
 
+            val bounds = builder.build()
+
+            //BOUND_PADDING is an int to specify padding of bound.. try 100.
+            val cu = CameraUpdateFactory.newLatLngBounds(bounds, 100)
+            mMap.animateCamera(cu)
+
+            mapAnimator = MapAnimator.getInstance()
+            mapAnimator.animateRoute(mMap, decodedPath)
         }
     }
 
